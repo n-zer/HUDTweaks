@@ -4,8 +4,8 @@ import com.github.burgerguy.hudtweaks.hud.element.HudElementContainer;
 import com.github.burgerguy.hudtweaks.util.gui.OverflowTextRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -24,14 +24,13 @@ public class ElementLabelWidget implements Drawable {
 		this.y = y;
 		overflowTextRenderer = new OverflowTextRenderer(40, 40, 4, x, y, maxWidth);
 	}
-	
-	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+
+	public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
 		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 		if (elementContainer == null) {
-			DrawableHelper.drawCenteredText(matrices, textRenderer, Text.translatable("hudtweaks.options.current_element.blank.display").setStyle(STYLE), x, y, 0xCCB0B0B0);
+			drawContext.drawCenteredTextWithShadow(textRenderer, Text.translatable("hudtweaks.options.current_element.blank.display").setStyle(STYLE), x, y, 0xCCB0B0B0);
 		} else {
-			overflowTextRenderer.render(matrices, textRenderer, Text.literal(elementContainer.getActiveElement().getIdentifier().toDisplayableString()).setStyle(STYLE), delta, 0xCCFFFFFF);
+			overflowTextRenderer.render(drawContext, textRenderer, Text.literal(elementContainer.getActiveElement().getIdentifier().toDisplayableString()).setStyle(STYLE), delta, 0xCCFFFFFF);
 		}
 	}
 

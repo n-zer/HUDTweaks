@@ -3,7 +3,7 @@ package com.github.burgerguy.hudtweaks.util.gui;
 import com.github.burgerguy.hudtweaks.util.gl.ScissorStack;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -32,7 +32,7 @@ public class OverflowTextRenderer {
 		tickCount = 0;
 	}
 
-	public void render(MatrixStack matrices, TextRenderer textRenderer, Text text, float tickDelta, int color) {
+	public void render(DrawContext drawContext, TextRenderer textRenderer, Text text, float tickDelta, int color) {
 		int stringWidth = textRenderer.getWidth(text);
 		int scrollRoom = stringWidth - maxWidth + xOffset * 2;
 		if (scrollRoom > 0) { // We want to start scrolling a bit before the true max width.
@@ -41,11 +41,11 @@ public class OverflowTextRenderer {
 			double scale = MinecraftClient.getInstance().getWindow().getScaleFactor();
 			int startX = x - maxWidth / 2;
 			ScissorStack.pushScissorArea((int) (startX * scale), 0, (int) (maxWidth * scale), MinecraftClient.getInstance().getWindow().getWidth());
-			textRenderer.drawWithShadow(matrices, text, startX - scrollOffset + xOffset, y, color);
+			drawContext.drawTextWithShadow(textRenderer, text.toString(), (int)(startX - scrollOffset + xOffset), y, color);
 			ScissorStack.popScissorArea();
 		} else {
 			tickCount = 0;
-			DrawableHelper.drawCenteredText(matrices, textRenderer, text, x, y, color);
+			drawContext.drawCenteredTextWithShadow(textRenderer, text, x, y, color);
 		}
 	}
 }

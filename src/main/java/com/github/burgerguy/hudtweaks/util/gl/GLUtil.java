@@ -4,15 +4,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 public final class GLUtil {
 	private GLUtil() {
 		// no instantiation, all contents static
 	}
 
-	public static final VertexConsumerProvider.Immediate VCP_INSTANCE = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+	public static final VertexConsumerProvider.Immediate VCP_INSTANCE = VertexConsumerProvider.immediate(Tessellator.getInstance().);
 
 	private static RenderLayer solidLineLayer;
 	private static RenderLayer dashedLineLayer;

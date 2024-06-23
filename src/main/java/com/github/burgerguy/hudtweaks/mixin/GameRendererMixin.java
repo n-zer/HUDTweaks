@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 
-    @Shadow protected abstract Shader loadShader(ResourceFactory factory, String name, VertexFormat vertexFormat);
+    @Shadow protected abstract ShaderProgram loadShader(ResourceFactory factory, String name, VertexFormat vertexFormat);
 
     @Inject(method = "loadShaders", at = @At("TAIL"))
     private void loadHudtweaksShaders(ResourceManager manager, CallbackInfo ci) {

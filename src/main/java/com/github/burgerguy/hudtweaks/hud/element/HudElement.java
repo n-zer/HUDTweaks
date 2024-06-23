@@ -11,12 +11,13 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.MatrixUtil;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public abstract class HudElement extends AbstractElementNode {
 	// These are all marked as transient so we can manually add them in our custom serializer
@@ -124,13 +125,29 @@ public abstract class HudElement extends AbstractElementNode {
 	}
 
 	protected void createMatrix() { // TODO: fix weird offset when scaling and rotating
-		Quaternion quaternion = new Quaternion(Vec3f.POSITIVE_Z, rotationDegrees, true);
-		Matrix4f matrix = Matrix4f.translate(getX(), getY(), 0);
-		matrix.multiply(Matrix4f.translate(getXRotationAnchor() * getWidth(), getYRotationAnchor() * getHeight(), 0));
-		matrix.multiply(quaternion);
-		matrix.multiply(Matrix4f.translate(-getXRotationAnchor() * getWidth(), -getYRotationAnchor() * getHeight(), 0));
-		matrix.multiply(Matrix4f.scale(xScale, yScale, 1));
-		matrix.multiply(Matrix4f.translate(-getDefaultX(), -getDefaultY(), 0));
+//		Quaternionf quaternion = new Quaternionf(Vector3f.POSITIVE_Z, rotationDegrees, true);
+//		Matrix4f matrix = Matrix4f.translate(getX(), getY(), 0);
+//		matrix.mul(Matrix4f.translate(getXRotationAnchor() * getWidth(), getYRotationAnchor() * getHeight(), 0));
+//		matrix.mul(quaternion);
+//		matrix.mul(Matrix4f.translate(-getXRotationAnchor() * getWidth(), -getYRotationAnchor() * getHeight(), 0));
+//		matrix.mul(Matrix4f.scale(xScale, yScale, 1));
+//		matrix.mul(Matrix4f.translate(-getDefaultX(), -getDefaultY(), 0));
+//		cachedMatrix = matrix;
+
+		Quaternionf quaternion = new Quaternionf();
+		quaternion.rotateAxis(rotationDegrees, new Vector3f(0f, 0f, 1f));
+
+		Matrix4f matrix = new Matrix4f().translate(getX(), getY(), 0);
+		matrix.mul(new Matrix4f().translate(getXRotationAnchor() * getWidth(), getYRotationAnchor() * getHeight(), 0));
+
+		Matrix4f quaternionMatrix = new Matrix4f();
+		quaternion.get(quaternionMatrix);
+		matrix.mul(quaternionMatrix);
+
+		matrix.mul(new Matrix4f().translate(-getXRotationAnchor() * getWidth(), -getYRotationAnchor() * getHeight(), 0));
+		matrix.mul(new Matrix4f().scale(xScale, yScale, 1));
+		matrix.mul(new Matrix4f().translate(-getDefaultX(), -getDefaultY(), 0));
+
 		cachedMatrix = matrix;
 	}
 

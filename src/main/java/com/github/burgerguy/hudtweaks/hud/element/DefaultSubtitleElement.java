@@ -5,9 +5,9 @@ import com.github.burgerguy.hudtweaks.mixin.InGameHudAccessor;
 import com.github.burgerguy.hudtweaks.util.Util;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import org.joml.AxisAngle4f;
+import org.joml.Quaternionf;
+import org.joml.Matrix4f;
 
 public class DefaultSubtitleElement extends HudElement {
 	public static final HTIdentifier IDENTIFIER = new HTIdentifier(Util.MINECRAFT_MODID, new HTIdentifier.ElementId("subtitle", "hudtweaks.element.subtitle"));
@@ -45,14 +45,14 @@ public class DefaultSubtitleElement extends HudElement {
 	@Override
 	// TODO: X scaling is weird here, scales from middle rather than left side
 	protected void createMatrix() { // TODO: rotation broken on this, also has weird offset
-		Quaternion quaternion = new Quaternion(Vec3f.POSITIVE_Z, rotationDegrees, true);
-		Matrix4f matrix = Matrix4f.translate(getX() / SCALE, getY() / SCALE, 0);
-		matrix.multiply(Matrix4f.translate(getXRotationAnchor() * getWidth(), getYRotationAnchor() * getHeight(), 0));
-		matrix.multiply(quaternion);
-		matrix.multiply(Matrix4f.translate(-getXRotationAnchor() * getWidth(), -getYRotationAnchor() * getHeight(), 0));
-		matrix.multiply(Matrix4f.translate(-getDefaultX() / SCALE, (-getDefaultY() / SCALE) + Y_OFFSET, 0));
-		matrix.multiply(Matrix4f.scale(xScale, yScale, 1));
-		matrix.multiply(Matrix4f.translate(0, -Y_OFFSET, 0));
+		Quaternionf quaternion = new Quaternionf(new AxisAngle4f(rotationDegrees, 0, 0, 1));
+		Matrix4f matrix = new Matrix4f().translate(getX() / SCALE, getY() / SCALE, 0);
+		matrix.translate(getXRotationAnchor() * getWidth(), getYRotationAnchor() * getHeight(), 0);
+		matrix.rotate(quaternion);
+		matrix.translate(-getXRotationAnchor() * getWidth(), -getYRotationAnchor() * getHeight(), 0);
+		matrix.translate(-getDefaultX() / SCALE, (-getDefaultY() / SCALE) + Y_OFFSET, 0);
+		matrix.scale(xScale, yScale, 1);
+		matrix.translate(0, -Y_OFFSET, 0);
 		cachedMatrix = matrix;
 	}
 }

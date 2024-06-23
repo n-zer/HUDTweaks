@@ -7,8 +7,8 @@ import com.github.burgerguy.hudtweaks.util.gl.DrawTest;
 import com.google.gson.JsonElement;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,7 +107,7 @@ public class HudElementContainer extends AbstractContainerNode {
 			Matrix4f activeElementMatrix = getActiveElement().getMatrix();
 			for (MatrixStack matrixStack : matrixStacks) {
 				matrixStack.push();
-				matrixStack.peek().getPositionMatrix().multiply(activeElementMatrix);
+				matrixStack.peek().getPositionMatrix().mul(activeElementMatrix);
 			}
 			matrixPushed = true;
 			return true;
